@@ -60,11 +60,11 @@ jobs:
           exit-code: '0' # Permite continuar el flujo registrando los hallazgos
           severity: 'CRITICAL,HIGH'
 
-      - name: Login en Docker Hub (opcional si tenés secretos configurados)
+      - name: Login en Docker Hub
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: docker/login-action@v3
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          username: ${{ vars.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Push de la imagen
@@ -73,4 +73,4 @@ jobs:
         with:
           context: ./app/src
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/mi-api-devops:latest
+          tags: ${{ vars.DOCKERHUB_USERNAME }}/mi-api-devops:latest
