@@ -1,1 +1,20 @@
-notas
+# Proyecto Final: Pipeline CI/CD Integral
+
+## Descripción de la Arquitectura
+- **Aplicación:** API en Python/Flask con endpoints `/` y `/health`.
+- **Contenedor:** Docker multi-stage build corriendo con usuario no-root por seguridad.
+- **Orquestación:** Kubernetes (Deployment con 2 réplicas, Service ClusterIP, HPA para autoscaling y probes de salud).
+- **IaC:** Terraform para aprovisionar VPC, Subnets e Internet Gateway en AWS.
+- **CI/CD:** GitHub Actions con ejecución de tests unitarios (`pytest`), análisis de vulnerabilidades con `Trivy`, build y push de imagen Docker.
+
+## Estructura del Repositorio
+- `/app`: Código fuente, dependencias, tests y Dockerfile.
+- `/k8s`: Manifiestos de despliegue en Kubernetes.
+- `/terraform`: Infraestructura como código.
+- `/.github/workflows`: Pipeline de CI/CD automatizado.
+
+## Cómo ejecutar localmente
+1. **Tests:** `pytest app/test_app.py`
+2. **Build Docker:** `docker build -t mi-api-devops:v1 ./app`
+3. **Run Contenedor:** `docker run -d -p 5000:5000 mi-api-devops:v1`
+4. **Terraform:** `cd terraform && terraform init && terraform validate`
