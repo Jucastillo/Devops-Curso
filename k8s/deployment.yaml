@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-devops-deployment
+  labels:
+    app: api-devops
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: api-devops
+  template:
+    metadata:
+      labels:
+        app: api-devops
+    spec:
+      containers:
+      - name: api-devops
+        image: tu-usuario-dockerhub/mi-api-devops:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 5000
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "100m"
+          limits:
+            memory: "128Mi"
+            cpu: "250m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 5000
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 5000
+          initialDelaySeconds: 5
+          periodSeconds: 10
