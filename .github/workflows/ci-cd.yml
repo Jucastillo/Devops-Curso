@@ -25,11 +25,11 @@ jobs:
       - name: Instalar dependencias
         run: |
           python -m pip install --upgrade pip
-          pip install -r app/requirements.txt
+          pip install -r app/src/requirements.txt
 
       - name: Ejecutar pruebas unitarias
         run: |
-          pytest app/test_app.py
+          pytest app/src/test_app.py
 
   # -------------------------------------------------------------
   # 2. Análisis de Seguridad y Build de Docker
@@ -48,7 +48,7 @@ jobs:
       - name: Build local para análisis
         uses: docker/build-push-action@v5
         with:
-          context: ./app
+          context: ./app/src
           load: true
           tags: api-devops:${{ github.sha }}
 
@@ -71,6 +71,6 @@ jobs:
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: docker/build-push-action@v5
         with:
-          context: ./app
+          context: ./app/src
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/mi-api-devops:latest
