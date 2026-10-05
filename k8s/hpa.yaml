@@ -8,11 +8,17 @@ spec:
     kind: Deployment
     name: api-devops-deployment
   minReplicas: 2
-  maxReplicas: 5
+  maxReplicas: 6
   metrics:
-  - type: Resource
-    resource:
-      name: cpu
-      target:
-        type: Utilization
-        averageUtilization: 70
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: 80

@@ -12,35 +12,23 @@ provider "aws" {
   region = var.aws_region
 }
 
-# VPC para aislar la infraestructura
-resource "aws_vpc" "devops_vpc" {
-  cidr_block           = var.vpc_cidr
-  enable_dns_hostnames = true
-  enable_dns_support   = true
+module "vpc" {
+  source = "./modules/vpc"
 
-  tags = {
-    Name        = "devops-vpc-project"
-    Environment = "production"
-  }
+  vpc_cidr             = var.vpc_cidr
+  region               = var.aws_region
+  project_name         = var.project_name
+  public_subnet_cidrs  = var.public_subnet_cidrs
+  private_subnet_cidrs = var.private_subnet_cidrs
 }
 
-# Subred pública
-resource "aws_subnet" "public_subnet" {
-  vpc_id                  = aws_vpc.devops_vpc.id
-  cidr_block              = "10.0.1.0/24"
-  map_public_ip_on_launch = true
-  availability_zone       = "${var.aws_region}a"
+module "eks" {
+  source = "./modules/eks"
 
-  tags = {
-    Name = "devops-public-subnet"
-  }
-}
-
-# Internet Gateway para salida a internet
-resource "aws_internet_gateway" "igw" {
-  vpc_id = aws_vpc.devops_vpc.id
-
-  tags = {
-    Name = "devops-igw"
-  }
+  cluster_name    = "${var.project_name}-eks"
+  cluster_version = var.eks_cluster_version
+  vpc_id          = module.vpc.vpc_id
+  subnet_ids      = module.vpc.private_subnet_ids
+  node_count      = var.eks_node_count
+  node_type       = var.eks_node_type
 }

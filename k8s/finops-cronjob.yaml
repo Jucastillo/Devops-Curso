@@ -1,0 +1,29 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: api-devops-night-shutdown
+  labels:
+    app: api-devops
+    purpose: finops
+spec:
+  # Apaga la app de lunes a viernes a las 22:00 UTC
+  schedule: "0 22 * * 1-5"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          serviceAccountName: api-devops-sa
+          restartPolicy: OnFailure
+          containers:
+            - name: shutdown
+              image: bitnami/kubectl:1.29
+              command:
+                - /bin/sh
+                - -c
+                - |
+                  echo "=== FinOps: apagando app $(date) ==="
+                  kubectl scale deployment api-devops-deployment --replicas=0
+                  echo "App apagada correctamente"

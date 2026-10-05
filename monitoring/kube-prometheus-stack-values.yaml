@@ -1,0 +1,40 @@
+# Valores simplificados para el stack completo
+prometheus:
+  prometheusSpec:
+    retention: 7d
+    resources:
+      requests:
+        memory: 400Mi
+        cpu: 100m
+      limits:
+        memory: 800Mi
+        cpu: 500m
+    # Descubre automáticamente pods con las anotaciones prometheus.io/scrape
+    additionalScrapeConfigs:
+      - job_name: 'api-devops'
+        kubernetes_sd_configs:
+          - role: pod
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
+            action: keep
+            regex: true
+          - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_path]
+            action: replace
+            target_label: __metrics_path__
+            regex: (.+)
+
+grafana:
+  enabled: true
+  adminPassword: "admin123"   # ⚠️ cambiar en producción
+  service:
+    type: ClusterIP
+  defaultDashboardsEnabled: true
+
+alertmanager:
+  enabled: true
+
+nodeExporter:
+  enabled: true
+
+kubeStateMetrics:
+  enabled: true
