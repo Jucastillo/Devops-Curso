@@ -41,4 +41,4 @@ EXPOSE 5000
 # Variables de entorno recomendadas para Python en contenedores
 ENV PYTHONUNBUFFERED=1
 
-CMD ["python", "app.py"]
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--workers", "2", "--threads", "4", "--access-logfile", "-", "app:app"]

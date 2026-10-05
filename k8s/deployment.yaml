@@ -13,13 +13,18 @@ spec:
     metadata:
       labels:
         app: api-devops
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "5000"
+        prometheus.io/path: "/metrics"
     spec:
       containers:
       - name: api-devops
-        image: tu-usuario-dockerhub/mi-api-devops:latest
-        imagePullPolicy: IfNotPresent
+        image: mi-api-devops:local          # ← cambiar
+        imagePullPolicy: Never              # ← cambiar
         ports:
-        - containerPort: 5000
+        - name: http
+          containerPort: 5000
         resources:
           requests:
             memory: "64Mi"
