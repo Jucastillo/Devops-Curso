@@ -11,12 +11,11 @@ jobs:
   # 1. Pruebas y Linter
   # -------------------------------------------------------------
   test:
-      - name: Instalar dependencias
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r app/src/requirements.txt
-          pip install -r app/src/requirements-dev.txt
-          pip install bandit
+    name: Pruebas y Linter
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout del código
+        uses: actions/checkout@v4
 
       - name: Configurar Python
         uses: actions/setup-python@v5
@@ -27,11 +26,12 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r app/src/requirements.txt
+          pip install -r app/src/requirements-dev.txt
+          pip install bandit
 
       - name: Ejecutar pruebas unitarias
         run: |
           pytest app/src/test_app.py
-
   # -------------------------------------------------------------
   # 2. Análisis de Seguridad y Build de Docker
   # -------------------------------------------------------------
