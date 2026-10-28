@@ -20,8 +20,8 @@ spec:
     spec:
       containers:
       - name: api-devops
-        image: mi-api-devops:local          # ← cambiar
-        imagePullPolicy: Never              # ← cambiar
+        image: api-devops:local          # ← cambiar
+        imagePullPolicy: IfNotPresent              # ← cambiar
         ports:
         - name: http
           containerPort: 5000
